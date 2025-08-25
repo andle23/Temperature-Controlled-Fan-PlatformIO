@@ -47,19 +47,27 @@ void loop() {
   int potVal = analogRead(POT);
   int tempThreshold = map(potVal, 0, 1023, 15, 30); // range
 
+
   // Display on LCD
   lcd.setCursor(0,0);
+  lcd.print("                "); // clear line
+  lcd.setCursor(0,0); // new line
   lcd.print("Temp: ");
   lcd.print(temp);
   lcd.print("C ");
 
   lcd.setCursor(0,1);
+  lcd.print("                "); // clear line
+  lcd.setCursor(0,1); // new line
   lcd.print("Thresh: ");
   lcd.print(tempThreshold);
   lcd.print("C ");
 
+
   // Determine motor speed
   int speed = 0;
+
+  
 
   if(temp >= tempThreshold){
 
@@ -75,21 +83,43 @@ void loop() {
     } 
 
     // Scale 0–10°C above threshold to 120–255 PWM
-    speed = 120 + (int)(diff * 13.5); // 120 at threshold, 255 at +10°C
+    // speed = 120 + (int)(diff * 13.5); // 120 at threshold, 255 at +10°C
     
-    digitalWrite(BUZZER, HIGH); 
+    speed = 255;
+    analogWrite(ENA, speed);
+
+    // **Set direction pins every time fan should run**
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+
+     // Passive buzzer frequency 500–1500Hz for comfort
+    int frequency = 100 + (int)((diff / 10.0) * 300);
+    tone(BUZZER, frequency);
+
+    // digitalWrite(BUZZER, HIGH); this was for active buzzer
+
 
   }
   else{
     
+     // Stop motor
     speed = 0;
-    digitalWrite(BUZZER, LOW);
+    analogWrite(ENA, 0);
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+
+    noTone(BUZZER); // buzzer fully off
+
+
+    //speed = 0;
+    //digitalWrite(BUZZER, LOW);
   }
+  
 
   Serial.print("Temp: "); Serial.print(temp);
   Serial.print(" | Thresh: "); Serial.print(tempThreshold);
   Serial.print(" | Speed: "); Serial.println(speed);
-  analogWrite(ENA, speed);
+  //analogWrite(ENA, speed);
 
   delay(1000);
 }
