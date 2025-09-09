@@ -7,10 +7,10 @@
 #define DHTPIN 4
 #define DHTTYPE DHT11
 
-#define ENA 3
+#define ENA 9 
 #define IN1 2
 #define IN2 5
-#define BUZZER 9
+#define BUZZER 13 
 #define POT A0
 
 // LCD pins: RS, E, D4, D5, D6, D7
@@ -37,6 +37,7 @@ void setup() {
   pinMode(BUZZER, OUTPUT);
   analogWrite(ENA, 0); // start motor stopped
 
+  
 
 }
 
@@ -68,7 +69,6 @@ void loop() {
   int speed = 0;
 
   
-
   if(temp >= tempThreshold){
 
     float diff = temp - tempThreshold;
@@ -82,44 +82,42 @@ void loop() {
       diff = 0;
     } 
 
-    // Scale 0–10°C above threshold to 120–255 PWM
-    // speed = 120 + (int)(diff * 13.5); // 120 at threshold, 255 at +10°C
+    // Map temperature difference (0–10°C) → fan speed (≈90–225, capped at 255)
+    speed = 90 + (int)(diff * 13.5); 
     
-    speed = 255;
     analogWrite(ENA, speed);
+    
 
     // **Set direction pins every time fan should run**
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
 
-     // Passive buzzer frequency 500–1500Hz for comfort
+
+    // Passive buzzer frequency 
     int frequency = 100 + (int)((diff / 10.0) * 300);
     tone(BUZZER, frequency);
 
-    // digitalWrite(BUZZER, HIGH); this was for active buzzer
+    
 
 
   }
   else{
     
-     // Stop motor
+     // Stop motor  
     speed = 0;
-    analogWrite(ENA, 0);
+    analogWrite(ENA, speed);
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, LOW);
 
-    noTone(BUZZER); // buzzer fully off
+    noTone(BUZZER); // passive buzzer fully off
 
 
-    //speed = 0;
-    //digitalWrite(BUZZER, LOW);
   }
   
-
-  Serial.print("Temp: "); Serial.print(temp);
-  Serial.print(" | Thresh: "); Serial.print(tempThreshold);
-  Serial.print(" | Speed: "); Serial.println(speed);
-  //analogWrite(ENA, speed);
+  // Debug (uncomment to see temp/threshold/speed in Serial Monitor)
+  //Serial.print("Temp: "); Serial.print(temp);
+  //Serial.print(" | Thresh: "); Serial.print(tempThreshold);
+  //Serial.print(" | Speed: "); Serial.println(speed);
 
   delay(1000);
 }
