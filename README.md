@@ -1,9 +1,6 @@
 # 🌡️ Temperature-Controlled Fan and Buzzer
 
-An Arduino project that uses a **DHT11 temperature sensor** to control a **3–6V DC motor with fan blade** and a **passive buzzer**.  
-The fan speed and buzzer frequency adapt to the current temperature relative to a user-set threshold (via potentiometer).  
-The buzzer provides audible feedback with a frequency that increases as the temperature rises.  
-Also a 16x2 LCD that displays both the live temperature and the threshold in real time.  
+An Arduino project that uses a **DHT11 temperature sensor** to control a **3–6V DC motor with a fan blade** and a **passive buzzer**.  The fan speed and buzzer frequency adapt to the current temperature relative to a user-set threshold (via potentiometer). The buzzer provides audible feedback with a frequency that increases as the temperature rises. Also, a 16x2 LCD that displays both the live temperature and the threshold in real time.  
 
 ---
 
@@ -40,7 +37,7 @@ Also a 16x2 LCD that displays both the live temperature and the threshold in rea
 - **LCD pins** → `RS=6, E=7, D4=8, D5=10, D6=11, D7=12`  
 - All grounds (Arduino, L293D, power module) **must be common**  
 
-> 📝 *Wiring colors in schematic are for clarity only and don’t need to match your physical wires.*  
+> 📝 *Wiring colors in the schematic are for clarity only and don’t need to match your physical wires.*  
 
 ---
 
